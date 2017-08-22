@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.cboss.config.mappers.QuizApiMapper">
+    <select id="getQuiz" resultMap="quiz" parameterType="java.lang.Long">
+        SELECT * FROM ksi2016_problem WHERE n = #{n}
+    </select>
+    <resultMap id = "quiz" type = "ru.cboss.contest.modules.tasks.beans.ProblemTask">
+       <result property = "id" column = "n"/>
+        <!--  <result property = "name" column = "NAME"/>
+         <result property = "branch" column = "BRANCH"/>
+         <result property = "percentage" column = "PERCENTAGE"/>
+         <result property = "phone" column = "PHONE"/>
+        <result property = "email" column = "EMAIL"/> -->
+    </resultMap>
+</mapper>
