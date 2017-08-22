@@ -1,0 +1,23 @@
+<html t:type="layout" title="OptionCreate"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
+      xmlns:p="tapestry:parameter">
+
+<p>Создание опции к вопросу # ${questionId}</p>
+
+    <div class="eg">
+        <t:beaneditform t:id="optionForm" object="option" submitLabel="Сохранить"
+                t:include="seqNo,body,bodyImg,fromDate,toDate">[BeanEditForm here]
+            <!-- If optimistic locking is not needed then comment out this next bit. It works because Hidden fields are part of the submit.
+            <p:version>
+                <t:hidden value="option.version"/>
+            </p:version> -->
+            <p:body>
+                <t:label for="body"/>
+                <t:textarea t:id="body" value="option.body" validate="none"/>
+            </p:body>
+        </t:beaneditform><br/>
+
+        <a t:type="pageLink" t:page="dictionary/QuestionOptions" t:context="questionId" href="#">Отменить</a>
+    </div>
+
+</html>

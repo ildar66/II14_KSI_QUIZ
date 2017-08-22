@@ -1,0 +1,100 @@
+<html t:type="layout" title="Users"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
+      xmlns:p="tapestry:parameter">
+
+<div class="contentblock">
+    <h2>Поиск пользователя</h2>
+    <form t:type="form" t:id="form">
+        <table class="searchblock" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td>
+                    <t:errors />
+                    <div class="search">
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <th><t:label for="loginId" /></th>
+                                <td><input t:id="loginId" t:type="TextField" t:value="searchFilter.loginId" size="15" t:validate="maxLength=15" /></td>
+                            </tr>
+                            <tr>
+                                <th><t:label for="firstName" /></th>
+                                <td><input t:id="firstName" t:type="TextField" value="searchFilter.firstName" size="20" t:validate="maxLength=20" /></td>
+                            </tr>
+                            <tr>
+                                <th><t:label for="lastName" /></th>
+                                <td><input t:id="lastName" t:type="TextField" value="searchFilter.lastName" size="20" t:validate="maxLength=20" /></td>
+                            </tr>
+                            <tr>
+                                <th><t:label for="emailAddress">E-mail</t:label></th>
+                                <td><input t:id="emailAddress" t:type="TextField" value="searchFilter.emailAddress" size="50" t:validate="maxLength=80" /></td>
+                            </tr>
+                            <tr>
+                                <th><t:label for="expiryDate"/></th>
+                                <!--  TODO Create new validators: minDateISO and maxDateISO for T5... -->
+                                <!--  TODO Create a validator that checks a date is valid, based on the format... -->
+                                <!--<td><input t:id="expiryDate" t:type="DateField" value="searchFilter.expiryDate" t:format="prop:dateInputFormat"/>
+                                    &nbsp;(${dateInputPattern})
+                                </td>-->
+                                <td><input t:id="expiryDate" t:type="DateField" value="searchFilter.expiryDate"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="buttons">
+                        <table>
+                            <tr>
+                                <td><input type="submit" value="Search" class="btn btn-large btn-primary" title="Search"/></td>
+                                <!--<td><button t:type="chenillekit/Button" type="button" t:event="Reset">Reset</button></td>-->
+                                <td><t:eventlink event="Reset" class="btn btn-default">Очистить</t:eventlink></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div t:type="if" t:test="showResult">
+        <!-- We need a form or we can't use checkbox. The form has no submit. -->
+        <form t:type="form">
+            <table class="matrixblock" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td>
+                        <div class="matrix">
+                            <table border="0" cellspacing="0" cellpadding="0"
+                                   t:type="grid" t:source="users" t:row="user" t:lean="literal:true"
+                                   t:include="loginId,firstName,lastName,email,expiryDate" t:add="actions"
+                                   t:rowsPerPage="10" t:pagerPosition="bottom">[Grid here]
+                                <!--<p:expiryDateCell>
+                                    <t:output value="user.expiryDate" format="dateListFormat"/>
+                                </p:expiryDateCell>-->
+                                <!--<p:activeCell>
+                                    <input t:type="checkbox" value="user.active" t:disabled="true"/>
+                                </p:activeCell>-->
+                                <p:actionsCell>
+                                    <!--<span class="action"><a t:type="pagelink" t:page="UserView" t:context="user.id" title="View">View</a></span>-->
+                                    <!--<span class="action"><a t:type="pagelink" t:page="UserEdit" t:context="user.id" title="Edit">Edit</a></span>-->
+									<!--<span class="action">
+                                        <a t:type="eventlink" t:event="Delete" t:context="[user.id,user.version]"
+                                           t:mixins="Confirm" t:message="Delete ${user.loginId}?" title="Delete">Delete</a>
+                                    </span>-->
+                                    <span class="action">
+                                        <a t:type="pageLink" t:page="security/UserBlocking" t:context="user.id" title="Blocking">Блокировки</a>
+                                    </span>&nbsp;
+                                    <span class="action">
+                                        <a t:type="pageLink" t:page="security/ProblemAccess" t:context="user.id" title="Access">Исключения</a>
+                                    </span>&nbsp;
+                                    <span class="action">
+                                        <a t:type="pageLink" t:page="security/UserEvents" t:context="user.id" title="Events">Анализ</a>
+                                    </span>
+                                </p:actionsCell>
+                                <p:empty>
+                                    <div class="nodata">Пользователи не найдены</div>
+                                </p:empty>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+</html>

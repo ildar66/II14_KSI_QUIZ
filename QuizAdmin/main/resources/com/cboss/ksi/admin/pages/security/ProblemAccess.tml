@@ -1,0 +1,47 @@
+<html t:type="layout" title="ProblemAccess"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
+      xmlns:p="tapestry:parameter">
+
+    <div class="row">
+        <div class="span4 offset3">
+            <t:form t:id="userBlockingForm">
+                <h3>Исключения по доступу к заданиям для пользователя</h3>
+                <t:label for="round"/>:
+                <select t:type="select" t:id="round" t:model="literal:0=Нулевой,1=Первый,2=Второй,3=Третий" t:zone="userTableZone"/>
+            </t:form>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <t:zone t:id="userTableZone" id="userTableZone" class="span4">
+            <h4>Список VIP заданий для пользователя</h4>
+            <table t:type="grid" t:source="vipAccessProblems" t:row="problem"
+                   t:rowsPerPage="10" t:pagerPosition="bottom" t:include="id,seqNo,round,body" t:add="action">
+
+                <p:actionCell>
+                    <a t:type="eventLink" t:event="ExcludeVIP" t:context="problem.id">Исключить из VIP</a>
+                </p:actionCell>
+
+                <p:empty>
+                    <h4>${message:empty_vip_list}</h4>
+                </p:empty>
+            </table>
+            <br/>
+            <h4>Список заданий для раунда: ${round}</h4>
+            <table t:type="grid" t:source="nonVipAccessProblems" t:row="problem"
+                   t:rowsPerPage="10" t:pagerPosition="bottom" t:include="id,seqNo,round,body" t:add="action">
+
+                <p:actionCell>
+                    <a t:type="eventLink" t:event="IncludeToVIP" t:context="problem.id">Включить в VIP</a>
+                </p:actionCell>
+
+                <p:empty>
+                    <h4>${message:empty_list}</h4>
+                </p:empty>
+            </table>
+        </t:zone>
+    </div>
+
+    <a t:type="eventLink" t:event="Cancel">Вернуться в Список пользователей</a>
+</html>

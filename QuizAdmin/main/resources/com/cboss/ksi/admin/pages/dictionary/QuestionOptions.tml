@@ -1,0 +1,25 @@
+<html t:type="layout" title="message:page-title"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
+      xmlns:p="tapestry:parameter">
+        <h2>${message:page-title} # ${question.id} </h2>
+        <h3>"${question.body}"</h3>
+
+        <br/><a t:type="pageLink" t:page="question/OptionCreate" t:context="question.id" href="#">Создать опцию...</a><br/><br/>
+
+        <table t:type="grid" t:source="options" t:row="option"
+               t:rowsPerPage="10" t:pagerPosition="bottom" t:include="id,seqNo,body,bodyImg" t:add="action">
+
+            <p:actionCell>
+                <!--<a t:type="pageLink" t:page="question/QuestionReview" t:context="question.id" href="#">Review</a>-->
+                <a t:type="pageLink" t:page="question/OptionUpdate" t:context="option" href="#">Update</a>&nbsp;
+                <a t:type="eventLink" t:event="Delete" t:context="option.id"
+                   t:mixins="Confirm" t:message="Delete ${option.seqNo} ${option.body}?">Delete</a>
+            </p:actionCell>
+
+            <p:empty>
+                <h4>${message:empty_list}</h4>
+            </p:empty>
+        </table>
+
+        <a t:type="pageLink" t:page="dictionary/Questions" t:context="question.problemId" href="#">Вернуться к списку вопросов</a>
+</html>

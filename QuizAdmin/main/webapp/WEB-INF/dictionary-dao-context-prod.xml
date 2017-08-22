@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util-3.1.xsd
+                           http://www.springframework.org/schema/jee
+                           http://www.springframework.org/schema/jee/spring-jee-3.1.xsd">
+    <bean class="com.cboss.ksi.dao.DictionaryDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="sql">
+            <util:map>
+                <entry key="PROBLEMS_BY_NAME">
+                    <value>
+                        <![CDATA[
+                            select n id, seq_no seqNo, body, fd, td, limit_time_sec, d_status, round
+                                from ksi2016_problem
+                                where lower(body) like lower('%' || ? || '%')
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="PROBLEMS_BY_NAME_COUNT">
+                    <value>
+                        <![CDATA[
+                            select count(*) from ksi2016_problem where lower(body) like lower('%' || ? || '%')
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="GET_PROBLEM">
+                    <value>
+                        <![CDATA[
+                            select n id, seq_no seqNo, body, fd, td, limit_time_sec, d_status, round
+                                from ksi2016_problem where n = ?
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="QUESTIONS_FOR_PROBLEM">
+                    <value>
+                        <![CDATA[
+                            select n id, r_problem_id, seq_no seqNo, body, fd, td, d_options_type, user_option, user_option_label
+                                from KSI2016_question where r_problem_id = ?
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="QUESTIONS_COUNT">
+                    <value>
+                        <![CDATA[
+                            select count(*) from KSI2016_question where r_problem_id = ?
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="CHANGE_PROBLEM">
+                    <value>
+                        <![CDATA[
+                            update ksi2016_problem set seq_no=?, body=?, fd=?, td=?, limit_time_sec=?, d_status=?, round=?
+                            where n = ?
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="CREATE_PROBLEM">
+                    <value>
+                        <![CDATA[
+                            insert into ksi2016_problem( n, seq_no, body, d_type, fd, td
+                                , factor, ksi_factor, f_factor, s_factor, version
+                                , score, base_score, base_time_sec, limit_score, limit_time_sec
+                                , d_status, round )
+                                values( ?, ?, ?, 2, ?, ?
+                                , 1, 1, 15*60, 0, 0
+                                , 10, 10, 30*60, 0.02, ? /* время */
+                                , ?, ?
+                                )
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="DELETE_PROBLEM">
+                    <value>
+                        <![CDATA[
+                            delete from ksi2016_problem where n = ?
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="GET_QUESTION">
+                    <value>
+                        <![CDATA[
+                            select n id, r_problem_id, seq_no seqNo, body, fd, td, d_options_type, user_option, user_option_label
+                                from KSI2016_question where n = ?
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="GET_QUESTION_OPTIONS">
+                    <value>
+                        <![CDATA[
+                            select n id, r_question_id, seq_no seqNo, body, utl_raw.cast_to_varchar2(body_img) bodyImg, fd, td, dsc
+                                from KSI_question_option where r_question_id = ?
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="CHANGE_QUESTION">
+                    <value>
+                        <![CDATA[
+                            update KSI2016_question
+                                set seq_no=?, body=?, fd=?, td=?, d_options_type=?, user_option=?, user_option_label=?
+                                where n = ?
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="CREATE_QUESTION">
+                    <value>
+                        <![CDATA[
+                            insert into KSI2016_question(n, r_problem_id, seq_no, body, fd, td, d_options_type, user_option, user_option_label)
+                                values( ksi2016_id_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ? )
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="DELETE_QUESTION">
+                    <value>
+                        <![CDATA[
+                            delete from KSI2016_question where n = ?
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="CREATE_QUESTION_OPTION">
+                    <value>
+                        <![CDATA[
+                            insert into KSI_question_option(n, r_question_id, seq_no, body, body_img, fd, td)
+                                values( ksi2016_id_seq.nextval, ?, ?, ?, utl_raw.cast_to_raw(?), ?, ?)
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="GET_QUESTION_OPTION">
+                    <value>
+                        <![CDATA[
+                            select n id, r_question_id, seq_no seqNo, body, utl_raw.cast_to_varchar2(body_img) bodyImg, fd, td, dsc
+                                from KSI_question_option where n = ?
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="CHANGE_QUESTION_OPTION">
+                    <value>
+                        <![CDATA[
+                            update KSI_question_option set seq_no=?, body=?, body_img=utl_raw.cast_to_raw(?), fd=?, td=?
+                            where n = ?
+                        ]]>
+                    </value>
+                </entry>
+                <entry key="DELETE_QUESTION_OPTION">
+                    <value>
+                        <![CDATA[
+                            delete from KSI_question_option where n = ?
+                        ]]>
+                    </value>
+                </entry>
+            </util:map>
+        </property>
+    </bean>
+</beans>

@@ -1,0 +1,54 @@
+<html t:type="layout" title="message:page-title"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
+      xmlns:p="tapestry:parameter">
+
+<div class="row">
+    <div class="span4 offset3">
+        <t:form t:id="problemsForm">
+            <h2>${message:list_tasks}</h2>
+            <t:textfield t:id="filter" class="input-block-level" placeholder="filter"/>
+            <t:submit class="btn btn-large btn-primary" value="Поиск"/>
+            <t:eventlink event="Reset" class="btn btn-default">Очистить</t:eventlink>
+        </t:form>
+    </div>
+</div>
+
+<div class="eg">
+    <br/><br/><a t:type="pageLink" t:page="problem/ProblemCreate" href="#">Создать задание...</a><br/><br/>
+
+    <!--<t:if test="errorMessage">
+        <span style="color:red">${errorMessage}</span><br/><br/>
+    </t:if>-->
+
+    <table t:type="grid" t:source="problems" t:row="problem"
+           t:rowsPerPage="10" t:pagerPosition="bottom" t:include="seqNo,round,status,body" t:add="questions, action">
+        <p:seqNoCell># ${problem.seqNo}</p:seqNoCell>
+        <p:bodyCell>
+            ${problem.body}
+        </p:bodyCell>
+        <p:questionsCell>
+            <a t:type="pageLink" t:page="dictionary/Questions" t:context="problem.id">
+                ${message:questions}</a>
+        </p:questionsCell>
+        <p:actionCell>
+            <!--<a t:type="pageLink" t:page="problem/ProblemReview" t:context="problem.id" href="#">Review</a>-->
+            <a t:type="pageLink" t:page="problem/ProblemUpdate" t:context="problem.id" href="#">Update</a>&nbsp;
+            <a t:type="eventLink" t:event="Delete" t:context="problem.id"
+               t:mixins="Confirm" t:message="Delete ${problem.seqNo} ${problem.body}?">Delete</a>
+        </p:actionCell>
+
+        <!--<p:dealDateCell>
+            <span t:type="output" t:format="literal:dd.MM.yyyy" t:value="problem.deal?.date"></span>
+        </p:dealDateCell>-->
+
+        <p:empty>
+            <h4>${message:empty_list}</h4>
+        </p:empty>
+    </table>
+</div>
+<!--<div t:type="jquery/dialog" t:id="selectClientDialog" t:clientId="selectClientDialog"
+     t:params="literal:{title:'Select client Dialog', modal:'true', height:350, width:500}">
+    <t:ClientDictionary t:id="clientDictionary"/>
+</div>-->
+
+</html>

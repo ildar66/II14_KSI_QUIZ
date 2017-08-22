@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util-3.1.xsd
+                           http://www.springframework.org/schema/jee
+                           http://www.springframework.org/schema/jee/spring-jee-3.1.xsd">
+
+    <bean class="com.cboss.ksi.dao.SecurityDaoImpl">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="sql">
+        <util:map>
+        <entry key="FIND_USERS">
+            <value>
+                <![CDATA[
+                    select n id, n loginId, '' firstName, '' lastName, email, td expiryDate
+                        from ksi2016_user
+                        where ROWNUM < 100
+                ]]>
+            </value>
+        </entry>
+        <entry key="FIND_USERS_COUNT">
+            <value>
+                <![CDATA[
+                    select count(*) from ksi2016_user where 1=1
+                ]]>
+            </value>
+        </entry>
+        <entry key="GET_NON_BLOCKING_USER_PROBLEMS">
+            <value>
+                <![CDATA[
+                    select n id, seq_no seqNo, body, fd, td, limit_time_sec, d_status, round
+                         from ksi2016_problem where round = ?
+                         and n not in( select r_problem_id from ksi_user_blocking where r_user_id = ? )
+                ]]>
+            </value>
+        </entry>
+        <entry key="GET_BLOCKING_USER_PROBLEMS">
+            <value>
+                <![CDATA[
+                    select n id, seq_no seqNo, body, fd, td, limit_time_sec, d_status, round
+                         from ksi2016_problem where round = ?
+                         and n in( select r_problem_id from ksi_user_blocking where r_user_id = ? )
+                ]]>
+            </value>
+        </entry>
+        <entry key="BLOCK_USER_PROBLEM">
+            <value>
+                <![CDATA[
+                    insert into ksi_user_blocking (n, r_user_id, r_problem_id)
+                    values (ksi2016_id_seq.nextval, ?, ?)
+                ]]>
+            </value>
+        </entry>
+        <entry key="UNBLOCK_USER_PROBLEM">
+            <value>
+                <![CDATA[
+                    delete from ksi_user_blocking where r_user_id = ? and r_problem_id = ?
+                ]]>
+            </value>
+        </entry>
+            <entry key="GET_NON_VIP_ACCESS_PROBLEMS">
+                <value>
+                    <![CDATA[
+                    select n id, seq_no seqNo, body, fd, td, limit_time_sec, d_status, round
+                         from ksi2016_problem where round = ?
+                         and n not in( select r_problem_id from ksi_problem_access where r_user_id = ? )
+                    ]]>
+                </value>
+            </entry>
+            <entry key="GET_VIP_ACCESS_PROBLEMS">
+                <value>
+                    <![CDATA[
+                    select n id, seq_no seqNo, body, fd, td, limit_time_sec, d_status, round
+                         from ksi2016_problem
+                         where n in( select r_problem_id from ksi_problem_access where r_user_id = ? )
+                    ]]>
+                </value>
+            </entry>
+            <entry key="INCLUDE_TO_VIP_USER_PROBLEM">
+                <value>
+                    <![CDATA[
+                    insert into ksi_problem_access (n, r_user_id, r_problem_id)
+                    values (ksi2016_id_seq.nextval, ?, ?)
+                    ]]>
+                </value>
+            </entry>
+            <entry key="EXCLUDE_FROM_VIP_USER_PROBLEM">
+                <value>
+                    <![CDATA[
+                    delete from ksi_problem_access where r_user_id = ? and r_problem_id = ?
+                    ]]>
+                </value>
+            </entry>
+            <entry key="GET_USER_EVENTS">
+                <value>
+                    <![CDATA[
+                        select * from ksi2016_event where r_user_id = ? and lower(obj_id) like lower('%' || ? || '%')
+                    ]]>
+                </value>
+            </entry>
+            <entry key="DELETE_EVENT">
+                <value>
+                    <![CDATA[
+                        delete from ksi2016_event where n = ?
+                    ]]>
+                </value>
+            </entry>
+        </util:map>
+        </property>
+    </bean>
+
+</beans>

@@ -1,0 +1,36 @@
+<html t:type="layout" title="UserEvents"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
+      xmlns:p="tapestry:parameter">
+
+    <div class="row">
+        <div class="span4 offset3">
+            <t:form t:id="userEventsForm">
+                <h3>${message:page-title} KSI № ${userID} </h3>
+                <!--<t:label for="filter"/>:-->
+                <t:textfield t:id="filter" class="input-block-level" placeholder="filter"/>
+                <t:submit class="btn btn-large btn-primary" value="Поиск"/>
+                <t:eventlink event="Reset" class="btn btn-default">Очистить</t:eventlink>
+            </t:form>
+        </div>
+    </div>
+
+    <table t:type="grid" t:source="events" t:row="event" t:rowsPerPage="10" t:pagerPosition="bottom"
+           t:exclude="userId" t:add="action">
+
+        <p:fromDateCell>
+            <t:output value="event.fromDate" format="literal:dd.MM.yyyy HH:mm"/>
+        </p:fromDateCell>
+
+        <p:actionCell>
+            <!--<a t:type="pageLink" t:page="question/EventUpdate" t:context="event" href="#">Update</a>-->
+            <a t:type="eventLink" t:event="Delete" t:context="event.id"
+               t:mixins="Confirm" t:message="Delete ${event} ?">Delete</a>
+        </p:actionCell>
+
+        <p:empty>
+            <h4>${message:empty_list}</h4>
+        </p:empty>
+    </table>
+
+    <a t:type="eventLink" t:event="Cancel">Вернуться в Список пользователей</a>
+</html>

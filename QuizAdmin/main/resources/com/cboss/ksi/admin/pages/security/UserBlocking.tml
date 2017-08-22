@@ -1,0 +1,49 @@
+<html t:type="layout" title="UserBlocking"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd"
+      xmlns:p="tapestry:parameter">
+
+    <div class="row">
+    <div class="span4 offset3">
+        <t:form t:id="userBlockingForm">
+            <h3>Блокировка заданий для пользователя</h3>
+            <t:label for="round"/>:
+            <select t:type="select" t:id="round" t:model="literal:1=Первый,2=Второй,3=Третий" t:zone="userTableZone"/>
+        </t:form>
+
+    </div>
+    </div>
+
+    <div class="row">
+    <t:zone t:id="userTableZone" id="userTableZone" class="span4">
+        <h4>Список блокированных заданий для раунда: ${round}</h4>
+        <table t:type="grid" t:source="blockingProblems" t:row="problem"
+        t:rowsPerPage="10" t:pagerPosition="bottom" t:include="id,seqNo,round,body" t:add="action">
+
+            <p:actionCell>
+                 <a t:type="eventLink" t:event="Unblocking" t:context="problem.id">Разблокировать</a>
+            </p:actionCell>
+
+            <p:empty>
+                <h4>${message:empty_blocking_list}</h4>
+            </p:empty>
+        </table>
+        <br/>
+        <h4>Список не блокированных заданий для раунда: ${round}</h4>
+        <table t:type="grid" t:source="nonBlockingProblems" t:row="problem"
+               t:rowsPerPage="10" t:pagerPosition="bottom" t:include="id,seqNo,round,body" t:add="action">
+
+            <p:actionCell>
+                <a t:type="eventLink" t:event="Blocking" t:context="problem.id">Блокировать</a>
+            </p:actionCell>
+
+            <p:empty>
+                <h4>${message:empty_list}</h4>
+            </p:empty>
+        </table>
+    </t:zone>
+    </div>
+
+    <!--<a t:type="pageLink" t:page="security/Users" href="#">Вернуться в Список пользователей</a>-->
+    <!--<t:eventlink event="Cancel" class="btn btn-default">Вернуться в Список пользователей</t:eventlink>-->
+    <a t:type="eventLink" t:event="Cancel">Вернуться в Список пользователей</a>
+</html>

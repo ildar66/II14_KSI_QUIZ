@@ -1,0 +1,4 @@
+<html t:type="layout" title="ksiAdmin Index"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_4.xsd">
+    Система администрирования заданиями, пользователями и пр.(В разработке)
+</html>
